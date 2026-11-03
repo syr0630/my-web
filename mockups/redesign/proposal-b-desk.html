@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Draftly Redesign — Proposal B / Research Desk</title>
+<style>
+  :root {
+    --bg: #e9ece6;
+    --paper: #ffffff;
+    --ink: #16201a;
+    --muted: #59665e;
+    --line: #d6ded7;
+    --line-strong: #b9c5bc;
+    --green: #1e6a4a;
+    --green-deep: #124b33;
+    --green-soft: #e5f0e8;
+    --dark-bg: #0f1512;
+    --dark-paper: #151d18;
+    --dark-ink: #e8efe9;
+    --dark-muted: #9fada4;
+    --dark-line: #29352e;
+    --dark-green: #7fba9b;
+    --sans: "Inter", "Segoe UI", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    --serif: "Newsreader", "Iowan Old Style", Georgia, "Songti SC", SimSun, serif;
+    --mono: "Cascadia Mono", Consolas, "Courier New", monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #d6d9d2; color: var(--ink); }
+  body { font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  button { font: inherit; }
+  .board { width: 1440px; min-height: 1120px; margin: 0 auto; padding: 26px 32px 20px; background: var(--bg); position: relative; }
+  .board::before { content: ""; position: absolute; left: 32px; right: 32px; top: 0; height: 3px; background: var(--green); }
+  .board-head { height: 82px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--line-strong); }
+  .scheme-line { display: flex; align-items: baseline; gap: 14px; }
+  .scheme-no { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--green); }
+  .board-head h1 { margin: 0; font-size: 31px; line-height: 1; font-weight: 650; letter-spacing: -.035em; }
+  .board-head h1 span { color: var(--muted); font-size: 14px; letter-spacing: .01em; margin-left: 12px; font-weight: 400; }
+  .head-note { max-width: 430px; font-size: 11px; line-height: 1.65; color: var(--muted); margin: 8px 0 0; }
+  .head-right { display: flex; align-items: center; gap: 22px; }
+  .mode-key { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--muted); }
+  .mode-key i { display: block; width: 18px; height: 10px; border: 1px solid var(--line-strong); }
+  .mode-key i.light { background: var(--paper); }
+  .mode-key i.dark { background: var(--dark-bg); border-color: var(--dark-line); }
+  .preview { display: grid; grid-template-columns: 888px 468px; gap: 20px; padding: 20px 0 18px; }
+
+  /* ——— Light: homepage ——— */
+  .home { height: 860px; background: var(--paper); border: 1px solid var(--line-strong); display: flex; flex-direction: column; overflow: hidden; }
+  .site-head { height: 58px; flex: 0 0 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand b { font-size: 19px; letter-spacing: -.05em; font-weight: 700; }
+  .brand span { font-family: var(--mono); font-size: 7px; letter-spacing: .12em; color: var(--green); border-left: 1px solid var(--line-strong); padding-left: 10px; }
+  .site-nav { display: flex; gap: 22px; font-size: 10.5px; color: var(--muted); }
+  .site-nav b { color: var(--ink); font-weight: 600; }
+  .site-tools { display: flex; align-items: center; gap: 11px; font-family: var(--mono); font-size: 8.5px; color: var(--muted); }
+  .theme-pill { width: 28px; height: 22px; border: 1px solid var(--line); display: grid; place-items: center; color: var(--green); }
+
+  .hero { display: grid; grid-template-columns: 1.22fr .9fr; min-height: 350px; border-bottom: 1px solid var(--line); }
+  .hero-copy { padding: 33px 24px 26px 24px; display: flex; flex-direction: column; align-items: flex-start; }
+  .kicker { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 8.5px; letter-spacing: .11em; color: var(--green); }
+  .kicker::before { content: ""; width: 16px; height: 1px; background: var(--green); }
+  .hero h2 { margin: 17px 0 13px; font-size: 47px; line-height: 1.15; letter-spacing: -.045em; font-weight: 640; }
+  .hero h2 .accent { color: var(--green-deep); position: relative; white-space: nowrap; }
+  .hero h2 .accent::after { content: ""; position: absolute; left: 0; right: 0; bottom: 3px; height: 5px; background: var(--green-soft); z-index: -1; }
+  .hero-lead { margin: 0; max-width: 360px; font-size: 12px; line-height: 1.85; color: var(--muted); }
+  .hero-actions { display: flex; align-items: center; gap: 18px; margin-top: auto; padding-top: 19px; }
+  .btn-solid { min-height: 42px; padding: 0 17px; display: inline-flex; align-items: center; gap: 11px; border: 1px solid var(--green); background: var(--green); color: #fff; font-size: 11px; font-weight: 600; cursor: pointer; }
+  .btn-solid svg { width: 14px; height: 14px; }
+  .btn-text { font-size: 10px; color: var(--green-deep); text-decoration: none; border-bottom: 1px solid #9fb7a8; padding-bottom: 4px; }
+  .hero-meta { margin-top: 17px; display: flex; gap: 14px; font-family: var(--mono); font-size: 7.5px; letter-spacing: .04em; color: #68766c; }
+  .hero-meta i { font-style: normal; color: #a4afa6; }
+
+  .edit-sheet { margin: 24px 23px 24px 0; border: 1px solid var(--line-strong); background: #fbfcfa; display: flex; flex-direction: column; position: relative; }
+  .edit-sheet::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--green); }
+  .sheet-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  .sheet-head span { font-family: var(--mono); font-size: 7.5px; letter-spacing: .1em; color: var(--green); }
+  .sheet-head em { font-family: var(--mono); font-style: normal; font-size: 7px; color: #748177; }
+  .sheet-body { padding: 12px 13px 10px; }
+  .before-after { padding: 8px 0 10px; border-bottom: 1px dotted #c7d0c8; }
+  .ba-label { font-family: var(--mono); font-size: 7px; letter-spacing: .1em; color: #7d8a80; margin-bottom: 5px; }
+  .before-after p { margin: 0; font-family: var(--serif); font-size: 11px; line-height: 1.65; color: #3a463d; }
+  .before-after .del { color: #887e73; text-decoration: line-through; }
+  .before-after .add { background: var(--green-soft); color: var(--green-deep); border-bottom: 1px solid #9dbba8; }
+  .sheet-stats { display: flex; gap: 16px; padding-top: 9px; font-family: var(--mono); font-size: 7px; color: #728075; }
+  .sheet-stats b { color: var(--green-deep); font-weight: 500; margin-left: 3px; }
+  .sheet-note { margin-top: auto; border-top: 1px solid var(--line); padding: 9px 12px; font-size: 8px; line-height: 1.55; color: #5f6d63; display: flex; gap: 7px; }
+  .sheet-note::before { content: "↳"; color: var(--green); }
+
+  .modules { padding: 17px 24px 12px; flex: 1; }
+  .modules-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+  .modules-head h3 { margin: 0; font-size: 15px; letter-spacing: -.02em; font-weight: 650; }
+  .modules-head span { font-family: var(--mono); font-size: 7.5px; letter-spacing: .09em; color: #6c796f; }
+  .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line-strong); border-left: 1px solid var(--line); }
+  .module { min-height: 92px; padding: 10px 10px 9px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); display: flex; flex-direction: column; }
+  .module .m-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; }
+  .module .m-no { font-family: var(--mono); font-size: 7px; color: var(--green); letter-spacing: .04em; }
+  .module svg { width: 12px; height: 12px; color: #87948a; }
+  .module h4 { margin: 0 0 4px; font-size: 11px; font-weight: 650; }
+  .module p { margin: 0; font-size: 8px; line-height: 1.55; color: var(--muted); }
+  .module.on { background: #f3f8f4; }
+  .module.on .m-no, .module.on h4 { color: var(--green-deep); }
+  .home-foot { height: 36px; flex: 0 0 36px; border-top: 1px solid var(--line); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 7px; color: #6f7c72; }
+
+  /* ——— Dark: workspace ——— */
+  .app { height: 860px; background: var(--dark-bg); color: var(--dark-ink); border: 1px solid #344039; display: grid; grid-template-columns: 108px 1fr; overflow: hidden; }
+  .app-rail { border-right: 1px solid var(--dark-line); padding: 16px 0 12px; display: flex; flex-direction: column; }
+  .app-brand { padding: 0 13px 19px; font-size: 17px; letter-spacing: -.05em; font-weight: 700; color: #eef3ed; }
+  .app-brand span { display: block; font-family: var(--mono); font-size: 6.5px; letter-spacing: .1em; color: var(--dark-green); margin-top: 4px; font-weight: 400; }
+  .rail-label { padding: 0 13px; font-family: var(--mono); font-size: 6.5px; letter-spacing: .11em; color: #67756a; margin-bottom: 7px; }
+  .rail-nav { display: flex; flex-direction: column; }
+  .rail-nav a { min-height: 38px; padding: 0 12px; display: flex; align-items: center; gap: 7px; font-size: 8.5px; color: #9fac9f; text-decoration: none; border-left: 2px solid transparent; }
+  .rail-nav a svg { width: 11px; height: 11px; opacity: .7; }
+  .rail-nav a.on { color: #eef4ec; background: #18231c; border-left-color: var(--dark-green); }
+  .rail-nav .num { font-family: var(--mono); font-size: 6.5px; color: #627066; width: 12px; }
+  .rail-bottom { margin-top: auto; padding: 10px 12px 0; border-top: 1px solid var(--dark-line); font-family: var(--mono); font-size: 6.5px; line-height: 1.65; color: #849186; }
+  .rail-bottom b { color: var(--dark-green); font-weight: 400; }
+
+  .app-main { min-width: 0; padding: 16px 15px 12px; display: flex; flex-direction: column; }
+  .app-bar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--dark-line); font-family: var(--mono); font-size: 7px; letter-spacing: .07em; color: #748277; }
+  .app-bar b { color: #b8c5b9; font-weight: 400; }
+  .app-bar .green { color: var(--dark-green); }
+  .app-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0 10px; }
+  .app-eyebrow { font-family: var(--mono); font-size: 6.5px; letter-spacing: .11em; color: var(--dark-green); margin-bottom: 5px; }
+  .app-head h2 { margin: 0; font-size: 22px; line-height: 1.1; letter-spacing: -.04em; font-weight: 650; }
+  .app-head p { margin: 5px 0 0; font-size: 8.5px; line-height: 1.55; color: #b0bcb2; max-width: 250px; }
+  .status { display: flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 6.5px; color: #8fa092; border: 1px solid #3a4b3f; padding: 4px 6px; white-space: nowrap; }
+  .status i { width: 5px; height: 5px; background: var(--dark-green); display: block; }
+
+  .steps { display: flex; align-items: center; gap: 0; border: 1px solid var(--dark-line); margin-bottom: 11px; }
+  .steps span { flex: 1; min-height: 27px; display: flex; align-items: center; justify-content: center; gap: 4px; font-family: var(--mono); font-size: 6.5px; letter-spacing: .03em; color: #718075; border-right: 1px solid var(--dark-line); }
+  .steps span:last-child { border-right: 0; }
+  .steps span.on { color: #e6eee5; background: #1a251e; }
+  .steps b { font-weight: 400; color: var(--dark-green); }
+
+  .panel-label { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 5px; font-family: var(--mono); font-size: 6.5px; letter-spacing: .07em; color: #77857a; }
+  .panel-label b { color: var(--dark-green); font-weight: 400; }
+  .paste { min-height: 82px; border: 1px solid var(--dark-line); background: #131a15; padding: 10px 10px 9px; font-size: 8.5px; line-height: 1.7; color: #c3cec3; }
+  .paste span { color: #dce6da; }
+  .paste .caret { display: inline-block; width: 1px; height: 10px; background: var(--dark-green); vertical-align: -1px; margin-left: 2px; }
+  .paste-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; font-family: var(--mono); font-size: 6.5px; color: #6e7c71; }
+  .actions { display: flex; gap: 6px; margin-top: 7px; }
+  .mini-btn { min-height: 31px; padding: 0 9px; border: 1px solid var(--dark-line); background: transparent; color: #c3cfc4; font-size: 7.5px; display: inline-flex; align-items: center; gap: 4px; }
+  .mini-btn svg { width: 9px; height: 9px; }
+  .mini-btn.solid { background: var(--dark-green); border-color: var(--dark-green); color: #0e1b13; font-weight: 600; }
+  .sample { display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--dark-line); border-top: 0; padding: 7px 8px; background: #18211b; }
+  .sample b { font-size: 7.5px; color: #c9d4c8; font-weight: 400; }
+  .sample em { font-family: var(--mono); font-size: 6.5px; color: #718075; font-style: normal; }
+
+  .analysis { margin-top: 11px; border-top: 1px solid var(--dark-line); padding-top: 9px; }
+  .analysis-head { display: flex; justify-content: space-between; align-items: center; }
+  .analysis-head h3 { margin: 0; font-size: 13px; letter-spacing: -.02em; font-weight: 650; }
+  .analysis-head span { font-family: var(--mono); font-size: 6.5px; color: var(--dark-green); }
+  .summary { margin: 5px 0 8px; font-size: 8.5px; line-height: 1.62; color: #b0bcb1; }
+  .dim-table { border-top: 1px solid var(--dark-line); }
+  .dim-row { display: grid; grid-template-columns: 65px 1fr 52px; gap: 7px; align-items: center; min-height: 33px; border-bottom: 1px solid #222d26; }
+  .dim-row b { font-size: 7.5px; font-weight: 550; color: #d3ddd1; }
+  .dim-row p { margin: 0; font-size: 7.5px; line-height: 1.4; color: #a2afa4; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .dim-row em { font-family: var(--mono); font-style: normal; font-size: 6.5px; color: var(--dark-green); text-align: right; }
+  .dim-row em.mid { color: #c8ab6d; }
+  .dim-row em.low { color: #c88c7d; }
+  .profile-box { margin-top: 10px; border: 1px solid var(--dark-line); }
+  .profile-head { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-bottom: 1px solid var(--dark-line); font-family: var(--mono); font-size: 6.5px; color: #77857a; }
+  .profile-head b { color: var(--dark-green); font-weight: 400; }
+  .profile { display: flex; align-items: center; justify-content: space-between; padding: 7px 8px; }
+  .profile b { display: block; font-size: 7.5px; font-weight: 500; color: #d6e0d4; }
+  .profile em { display: block; font-family: var(--mono); font-style: normal; font-size: 6.5px; color: #6f7d72; margin-top: 2px; }
+  .profile span { font-family: var(--mono); font-size: 6.5px; color: var(--dark-green); }
+  .app-note { margin-top: auto; border-top: 1px solid var(--dark-line); padding-top: 8px; font-size: 7.5px; line-height: 1.55; color: #87958a; }
+
+  /* ——— tokens ——— */
+  .tokens { height: 108px; border-top: 1px solid var(--line-strong); display: grid; grid-template-columns: 360px 1fr 380px; gap: 26px; padding-top: 13px; }
+  .tokens h5 { margin: 0 0 8px; font-family: var(--mono); font-size: 8px; letter-spacing: .12em; color: var(--green); font-weight: 400; }
+  .swatches { display: flex; gap: 7px; }
+  .swatch { width: 52px; }
+  .swatch i { display: block; height: 23px; border: 1px solid rgba(0,0,0,.08); }
+  .swatch span { display: block; font-family: var(--mono); font-size: 6.5px; color: #68766c; margin-top: 4px; }
+  .type-sample { display: flex; align-items: baseline; gap: 18px; }
+  .type-sample strong { font-size: 24px; font-weight: 650; letter-spacing: -.045em; }
+  .type-sample span { font-size: 10px; color: var(--muted); line-height: 1.6; max-width: 260px; }
+  .type-sample code { font-family: var(--mono); font-size: 7px; color: #68766c; display: block; margin-top: 4px; }
+  .principles { display: flex; flex-direction: column; gap: 5px; }
+  .principles p { margin: 0; font-size: 9px; color: var(--muted); display: flex; gap: 7px; }
+  .principles p::before { content: "—"; color: var(--green); }
+</style>
+</head>
+<body>
+<div class="board">
+  <header class="board-head">
+    <div>
+      <div class="scheme-line"><span class="scheme-no">PROPOSAL B / 03</span><h1>研究台 <span>Research Desk</span></h1></div>
+      <p class="head-note">瑞士网格、冷白纸面、仪表式信息层级。绿色只标记当前路径，界面更像研究工具而不是 AI 产品。</p>
+    </div>
+    <div class="head-right"><div class="mode-key"><i class="light"></i> LIGHT <i class="dark"></i> DARK</div></div>
+  </header>
+
+  <main class="preview">
+    <section class="home" aria-label="日间首页方案 B">
+      <div class="site-head">
+        <div class="brand"><b>Draftly</b><span>WRITING DESK</span></div>
+        <nav class="site-nav"><b>工作台</b><span>方法</span><span>关于</span><span>反馈</span></nav>
+        <div class="site-tools"><span>ZH / EN</span><span class="theme-pill"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span></div>
+      </div>
+
+      <div class="hero">
+        <div class="hero-copy">
+          <div class="kicker">A WORKSPACE FOR CLEAR PROSE</div>
+          <h2>让文字回到<br /><span class="accent">清晰与准确</span>。</h2>
+          <p class="hero-lead">润色、语法、翻译与风格画像，共用一套可追溯的编辑流程。你可以看到改了什么，也可以选择不改。</p>
+          <div class="hero-actions">
+            <button class="btn-solid">打开工作台<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            <a class="btn-text" href="#">查看方法</a>
+          </div>
+          <div class="hero-meta"><span>9 种标准</span><i>/</i><span>1000 字上限</span><i>/</i><span>本地存储</span></div>
+        </div>
+
+        <div class="edit-sheet">
+          <div class="sheet-head"><span>EDIT / 01</span><em>ZH · 学术</em></div>
+          <div class="sheet-body">
+            <div class="before-after">
+              <div class="ba-label">BEFORE</div>
+              <p>随着人工智能技术的快速发展，越来越多的研究者开始关注大语言模型在教育领域的应用。</p>
+            </div>
+            <div class="before-after">
+              <div class="ba-label">AFTER</div>
+              <p>大语言模型正快速进入教育研究。<span class="add">研究者开始关注</span>它对学生学习效果的影响。</p>
+            </div>
+            <div class="sheet-stats"><span>删除<b>12</b></span><span>新增<b>8</b></span><span>事实变更<b>0</b></span></div>
+          </div>
+          <div class="sheet-note">删去“随着……发展”的套语；保留原判断，不补写论据。</div>
+        </div>
+      </div>
+
+      <div class="modules">
+        <div class="modules-head"><h3>六个工作模块</h3><span>SELECT / 01—06</span></div>
+        <div class="module-grid">
+          <a class="module on" href="#"><div class="m-top"><span class="m-no">01 / POLISH</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><h4>文本润色</h4><p>九种标准，事实与数字保持不变。</p></a>
+          <a class="module" href="#"><div class="m-top"><span class="m-no">02 / STYLE</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><h4>风格画像</h4><p>从样本提取可复核的表达习惯。</p></a>
+          <a class="module" href="#"><div class="m-top"><span class="m-no">03 / GRAMMAR</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><h4>语法检查</h4><p>逐条定位，接受或忽略。</p></a>
+          <a class="module" href="#"><div class="m-top"><span class="m-no">04 / TRANSLATE</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><h4>中英翻译</h4><p>自然、正式、学术三种语气。</p></a>
+          <a class="module" href="#"><div class="m-top"><span class="m-no">05 / HUMANIZE</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><h4>人性化改写</h4><p>减少模板感，不编造经历。</p></a>
+          <a class="module" href="#"><div class="m-top"><span class="m-no">06 / DETECT</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><h4>AI 文本检测</h4><p>概率性信号，不作为身份证明。</p></a>
+        </div>
+      </div>
+      <div class="home-foot"><span>DRAFTLY · CLEAR PROSE, TRACEABLE EDITS</span><span>隐私说明 / 使用条款</span></div>
+    </section>
+
+    <aside class="app" aria-label="夜间工作台方案 B">
+      <div class="app-rail">
+        <div class="app-brand">Draftly<span>WRITING DESK</span></div>
+        <div class="rail-label">MODULES</div>
+        <nav class="rail-nav">
+          <a href="#"><span class="num">01</span>润色</a>
+          <a href="#"><span class="num">02</span>人性化</a>
+          <a href="#"><span class="num">03</span>翻译</a>
+          <a href="#"><span class="num">04</span>语法</a>
+          <a href="#"><span class="num">05</span>检测</a>
+          <a class="on" href="#"><span class="num">06</span>风格画像</a>
+        </nav>
+        <div class="rail-bottom">STATUS<br /><b>AI · READY</b><br />LOCAL DB · OK</div>
+      </div>
+      <div class="app-main">
+        <div class="app-bar"><span><b>工作台</b> / 风格画像</span><span class="green">自动保存 · 刚刚</span></div>
+        <div class="app-head">
+          <div><div class="app-eyebrow">STYLE PROFILE / 06</div><h2>写作风格画像</h2><p>从参考文本提取表达习惯，结果可编辑、可复核。</p></div>
+          <span class="status"><i></i>1 份样本</span>
+        </div>
+
+        <div class="steps"><span class="on"><b>01</b> 输入</span><span><b>02</b> 分析</span><span><b>03</b> 使用</span></div>
+
+        <div class="panel-label"><b>01 / 参考文本</b><span>195 字</span></div>
+        <div class="paste"><span>写作不是把话说漂亮，而是把话说清楚。</span>我先删去不必要的修饰，再检查每一个判断是否有依据。<span class="caret"></span></div>
+        <div class="paste-foot"><span>粘贴或导入 TXT / DOCX / PDF</span><span>最多 12,000 字</span></div>
+        <div class="actions"><button class="mini-btn solid">添加文本<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button class="mini-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 20h14"/></svg>上传文件</button></div>
+        <div class="sample"><b>粘贴样本 01</b><em>195 字 · 删除</em></div>
+
+        <div class="analysis">
+          <div class="analysis-head"><h3>分析结果</h3><span>CONFIDENCE · LOW</span></div>
+          <p class="summary">短句为主，判断克制；少用形容词，倾向先给结论再补依据。样本较短，暂不足以判断稳定风格。</p>
+          <div class="dim-table">
+            <div class="dim-row"><b>语气</b><p>克制、直接，避免抒情。</p><em>HIGH</em></div>
+            <div class="dim-row"><b>用词</b><p>具体动词优先，少用套语。</p><em class="mid">MED</em></div>
+            <div class="dim-row"><b>句式</b><p>短句推进，一句一个判断。</p><em>HIGH</em></div>
+            <div class="dim-row"><b>表达</b><p>结论先行，再补依据。</p><em class="mid">MED</em></div>
+            <div class="dim-row"><b>修辞</b><p>极少比喻，节奏靠停顿。</p><em class="low">LOW</em></div>
+          </div>
+        </div>
+
+        <div class="profile-box"><div class="profile-head"><span>已保存画像 / 01</span><b>+ 新建</b></div><div class="profile"><div><b>短句随笔</b><em>1 份样本 · 刚刚更新</em></div><span>使用 →</span></div></div>
+        <div class="app-note">一致性评级仅含高 / 中 / 低，不提供未校准百分比。</div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="tokens">
+    <div><h5>COLOR / 冷白与林绿</h5><div class="swatches"><div class="swatch"><i style="background:#ffffff"></i><span>#FFFFFF</span></div><div class="swatch"><i style="background:#e9ece6"></i><span>#E9ECE6</span></div><div class="swatch"><i style="background:#1e6a4a"></i><span>#1E6A4A</span></div><div class="swatch"><i style="background:#0f1512"></i><span>#0F1512</span></div><div class="swatch"><i style="background:#7fba9b"></i><span>#7FBA9B</span></div></div></div>
+    <div><h5>TYPE / 工具型层级</h5><div class="type-sample"><strong>清晰，可复核。</strong><span>标题与界面共用无衬线，正文保留衬线阅读感；数字与状态用等宽字。<code>INTER / NEWSREADER / CASCADIA MONO</code></span></div></div>
+    <div class="principles"><h5>PRINCIPLES / 减少 AI 味</h5><p>用网格与分隔线组织信息，不堆卡片。</p><p>绿色只标记路径、焦点与结果。</p><p>状态、限制与失败路径都写在界面上。</p></div>
+  </footer>
+</div>
+</body>
+</html>

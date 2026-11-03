@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Draftly Redesign — Proposal C / Catalogue</title>
+<style>
+  :root {
+    --bg: #e7e4d8;
+    --paper: #f8f6ee;
+    --ink: #191d19;
+    --muted: #5a6159;
+    --line: #c9ccbf;
+    --line-dark: #aeb3a7;
+    --green: #315c43;
+    --green-deep: #1f3e2d;
+    --green-soft: #e3e8dc;
+    --dark-bg: #111512;
+    --dark-paper: #181d18;
+    --dark-ink: #eceee5;
+    --dark-muted: #a1a89d;
+    --dark-line: #343b34;
+    --dark-green: #91b99d;
+    --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Songti SC", "STSong", SimSun, serif;
+    --sans: "Segoe UI", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    --mono: "Cascadia Mono", Consolas, "Courier New", monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #d5d2c7; color: var(--ink); }
+  body { font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  button { font: inherit; }
+  .board { width: 1440px; min-height: 1120px; margin: 0 auto; padding: 26px 32px 20px; background: var(--bg); position: relative; }
+  .board::before { content: ""; position: absolute; left: 32px; right: 32px; top: 0; height: 3px; background: var(--green); }
+  .board-head { height: 82px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--line-dark); }
+  .scheme-line { display: flex; align-items: baseline; gap: 14px; }
+  .scheme-no { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--green); }
+  .board-head h1 { margin: 0; font-family: var(--serif); font-size: 34px; line-height: 1; font-weight: 600; letter-spacing: -.025em; }
+  .board-head h1 span { color: var(--muted); font-size: 14px; letter-spacing: .01em; margin-left: 12px; font-family: var(--sans); font-weight: 400; }
+  .head-note { max-width: 430px; font-size: 11px; line-height: 1.65; color: var(--muted); margin: 8px 0 0; }
+  .head-right { display: flex; align-items: center; gap: 22px; }
+  .mode-key { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--muted); }
+  .mode-key i { display: block; width: 18px; height: 10px; border: 1px solid var(--line-dark); }
+  .mode-key i.light { background: var(--paper); }
+  .mode-key i.dark { background: var(--dark-bg); border-color: var(--dark-line); }
+  .preview { display: grid; grid-template-columns: 888px 468px; gap: 20px; padding: 20px 0 18px; }
+
+  /* ——— Light: homepage catalogue ——— */
+  .home { height: 860px; background: var(--paper); border: 1px solid var(--line-dark); display: flex; flex-direction: column; overflow: hidden; }
+  .site-head { height: 54px; flex: 0 0 54px; border-bottom: 1px solid var(--line-dark); display: flex; align-items: center; justify-content: space-between; padding: 0 23px; }
+  .wordmark { font-family: var(--mono); font-size: 13px; letter-spacing: .28em; font-weight: 500; }
+  .wordmark span { font-family: var(--sans); letter-spacing: 0; font-size: 8px; color: var(--green); margin-left: 10px; }
+  .site-nav { display: flex; gap: 22px; font-family: var(--mono); font-size: 8px; letter-spacing: .06em; color: var(--muted); }
+  .site-nav b { color: var(--ink); font-weight: 500; border-bottom: 1px solid var(--green); padding-bottom: 3px; }
+  .site-tools { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 7.5px; color: var(--muted); }
+  .theme-pill { width: 26px; height: 21px; border: 1px solid var(--line-dark); display: grid; place-items: center; color: var(--green); }
+
+  .hero { display: grid; grid-template-columns: 1.3fr .72fr; min-height: 352px; border-bottom: 1px solid var(--line-dark); }
+  .hero-copy { padding: 30px 22px 25px 23px; display: flex; flex-direction: column; align-items: flex-start; border-right: 1px solid var(--line); }
+  .kicker { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 8px; letter-spacing: .14em; color: var(--green); }
+  .kicker::before { content: ""; width: 6px; height: 6px; background: var(--green); }
+  .hero h2 { margin: 16px 0 13px; font-family: var(--serif); font-size: 53px; line-height: 1.13; letter-spacing: -.03em; font-weight: 600; }
+  .hero h2 em { font-style: italic; color: var(--green-deep); }
+  .hero-lead { margin: 0; max-width: 390px; font-size: 12px; line-height: 1.85; color: #4f5a50; }
+  .hero-actions { display: flex; align-items: center; gap: 19px; margin-top: auto; padding-top: 18px; }
+  .link-primary { display: inline-flex; align-items: center; gap: 12px; min-height: 42px; border-bottom: 1px solid var(--green); color: var(--green-deep); text-decoration: none; font-size: 11px; font-weight: 600; padding: 0 2px; }
+  .link-primary svg { width: 14px; height: 14px; }
+  .link-secondary { color: var(--muted); text-decoration: none; font-family: var(--mono); font-size: 8px; letter-spacing: .05em; }
+  .hero-meta { margin-top: 16px; font-family: var(--mono); font-size: 7px; color: #6b756b; display: flex; gap: 12px; }
+  .hero-meta i { font-style: normal; color: #a0a89e; }
+
+  .record { margin: 22px 22px 22px 0; border: 1px solid var(--line-dark); background: #f4f1e7; padding: 11px 12px; display: flex; flex-direction: column; position: relative; }
+  .record-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 7px; letter-spacing: .09em; color: #6f796f; }
+  .record-top b { color: var(--green); font-weight: 500; }
+  .record-no { font-family: var(--serif); font-size: 35px; line-height: 1; color: var(--green-deep); margin-top: 12px; letter-spacing: -.04em; }
+  .record h3 { margin: 6px 0 8px; font-family: var(--serif); font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  .record p { margin: 0; font-size: 9px; line-height: 1.7; color: #4f5a50; }
+  .record-rule { margin: 12px 0 10px; border-top: 1px dotted #b9beb1; }
+  .record-dl { display: grid; grid-template-columns: 42px 1fr; gap: 5px 7px; font-family: var(--mono); font-size: 6.5px; color: #5d685e; }
+  .record-dl b { color: #4b564d; font-weight: 400; }
+  .stamp { margin-top: auto; align-self: flex-start; border: 1px solid var(--green); color: var(--green-deep); font-family: var(--mono); font-size: 7px; letter-spacing: .12em; padding: 5px 7px; transform: rotate(-1.5deg); }
+  .stamp span { display: block; font-family: var(--sans); font-size: 6px; letter-spacing: .02em; color: #5f6b60; margin-top: 2px; }
+
+  .catalogue { padding: 15px 23px 10px; flex: 1; }
+  .catalogue-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 7px; }
+  .catalogue-head h3 { margin: 0; font-family: var(--mono); font-size: 8px; letter-spacing: .14em; font-weight: 500; }
+  .catalogue-head span { font-family: var(--mono); font-size: 7px; color: #6f796f; }
+  .cat-row { min-height: 59px; display: grid; grid-template-columns: 30px 180px 1fr 66px 16px; align-items: center; gap: 8px; border-top: 1px solid var(--line); text-decoration: none; color: var(--ink); }
+  .cat-row .no { font-family: var(--mono); font-size: 8px; color: var(--green); }
+  .cat-row h4 { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .01em; }
+  .cat-row h4 span { display: block; font-family: var(--mono); font-size: 6.5px; letter-spacing: .07em; color: #657166; font-weight: 400; margin-top: 3px; }
+  .cat-row p { margin: 0; font-size: 8.5px; line-height: 1.5; color: #4f5a50; }
+  .cat-row .tag { font-family: var(--mono); font-size: 6.5px; color: #5f6a60; text-align: right; }
+  .cat-row svg { width: 12px; height: 12px; color: #818b80; }
+  .home-foot { height: 35px; flex: 0 0 35px; border-top: 1px solid var(--line-dark); display: flex; align-items: center; justify-content: space-between; padding: 0 23px; font-family: var(--mono); font-size: 6.5px; letter-spacing: .04em; color: #6c766c; }
+
+  /* ——— Dark: archive workspace ——— */
+  .app { height: 860px; background: var(--dark-bg); color: var(--dark-ink); border: 1px solid #394138; display: flex; flex-direction: column; overflow: hidden; }
+  .app-top { height: 44px; flex: 0 0 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 13px; border-bottom: 1px solid var(--dark-line); }
+  .app-brand { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; color: #e3e8df; }
+  .app-nav { display: flex; gap: 8px; font-family: var(--mono); font-size: 6.5px; color: #8d998f; }
+  .app-nav b { color: var(--dark-green); font-weight: 400; }
+  .app-mode { width: 23px; height: 23px; border: 1px solid var(--dark-line); display: grid; place-items: center; color: var(--dark-green); }
+  .app-mode svg { width: 11px; height: 11px; }
+  .app-body { flex: 1; display: grid; grid-template-columns: 72px 1fr; min-height: 0; }
+  .meta-rail { border-right: 1px solid var(--dark-line); padding: 13px 8px 12px; display: flex; flex-direction: column; }
+  .meta-label { font-family: var(--mono); font-size: 6.5px; letter-spacing: .1em; color: #849186; margin-bottom: 4px; }
+  .meta-value { font-family: var(--mono); font-size: 7.5px; line-height: 1.55; color: #bcc6bb; margin-bottom: 13px; }
+  .meta-value.green { color: var(--dark-green); }
+  .meta-stamp { margin-top: auto; border: 1px solid #4d6654; color: var(--dark-green); font-family: var(--mono); font-size: 6px; letter-spacing: .06em; padding: 4px; text-align: center; }
+  .app-content { padding: 14px 14px 11px; display: flex; flex-direction: column; min-height: 0; }
+  .app-head { border-bottom: 1px solid var(--dark-line); padding-bottom: 10px; }
+  .app-kicker { font-family: var(--mono); font-size: 6.5px; letter-spacing: .1em; color: var(--dark-green); margin-bottom: 6px; }
+  .app-head h2 { margin: 0; font-family: var(--serif); font-size: 25px; line-height: 1.1; font-weight: 600; letter-spacing: -.02em; color: #edf0e7; }
+  .app-head p { margin: 6px 0 0; font-size: 8.5px; line-height: 1.6; color: #b5c0b5; max-width: 300px; }
+
+  .field { margin-top: 10px; }
+  .field-label { display: flex; justify-content: space-between; align-items: center; padding-bottom: 4px; font-family: var(--mono); font-size: 7px; letter-spacing: .08em; color: #849186; }
+  .field-label b { color: var(--dark-green); font-weight: 400; }
+  .text-box { min-height: 82px; border: 1px solid var(--dark-line); background: #151b16; padding: 9px 10px; color: #b3beb2; font-size: 8.5px; line-height: 1.7; }
+  .text-box span { color: #dbe4d8; }
+  .text-box .caret { display: inline-block; width: 1px; height: 10px; background: var(--dark-green); vertical-align: -1px; margin-left: 2px; }
+  .field-foot { display: flex; justify-content: space-between; align-items: center; padding: 5px 0 0; font-family: var(--mono); font-size: 6.5px; color: #849186; }
+  .field-actions { display: flex; gap: 6px; margin-top: 6px; }
+  .mini-btn { min-height: 31px; padding: 0 9px; border: 1px solid var(--dark-line); background: transparent; color: #c6d0c4; font-size: 7.5px; display: inline-flex; align-items: center; gap: 4px; }
+  .mini-btn svg { width: 9px; height: 9px; }
+  .mini-btn.solid { background: var(--dark-green); border-color: var(--dark-green); color: #102018; font-weight: 600; }
+  .sample-line { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; border: 1px solid var(--dark-line); border-left: 2px solid var(--dark-green); padding: 6px 8px; font-size: 7.5px; color: #c2ccc0; }
+  .sample-line em { font-family: var(--mono); font-style: normal; font-size: 6.5px; color: #6f7c70; }
+
+  .result { margin-top: 10px; border-top: 1px solid var(--dark-line); padding-top: 8px; }
+  .result-head { display: flex; justify-content: space-between; align-items: center; }
+  .result-head h3 { margin: 0; font-family: var(--mono); font-size: 7px; letter-spacing: .12em; font-weight: 500; color: #dce5d9; }
+  .result-head span { font-family: var(--mono); font-size: 6px; color: var(--dark-green); border: 1px solid #486050; padding: 3px 4px; }
+  .result-summary { margin: 5px 0 7px; font-size: 8.5px; line-height: 1.6; color: #b0bcb0; }
+  .record-table { border-top: 1px solid var(--dark-line); }
+  .record-row { display: grid; grid-template-columns: 55px 1fr 45px; gap: 6px; min-height: 34px; align-items: center; border-bottom: 1px solid #242e26; }
+  .record-row b { font-family: var(--mono); font-size: 6.5px; font-weight: 400; color: #c6d1c3; }
+  .record-row p { margin: 0; font-size: 7.5px; color: #a4b0a4; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .record-row em { font-family: var(--mono); font-style: normal; font-size: 6px; color: var(--dark-green); text-align: right; }
+  .record-row em.mid { color: #c8ac70; }
+  .record-row em.low { color: #c88f7f; }
+
+  .saved-record { margin-top: 9px; border: 1px solid var(--dark-line); display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 7px 8px; }
+  .saved-record b { display: block; font-size: 7.5px; color: #d7e0d4; font-weight: 500; }
+  .saved-record em { display: block; font-family: var(--mono); font-style: normal; font-size: 6px; color: #6e7b70; margin-top: 2px; }
+  .saved-record span { font-family: var(--mono); font-size: 6.5px; color: var(--dark-green); }
+  .app-foot { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--dark-line); display: flex; justify-content: space-between; font-family: var(--mono); font-size: 6.5px; color: #829085; }
+
+  /* ——— tokens ——— */
+  .tokens { height: 108px; border-top: 1px solid var(--line-dark); display: grid; grid-template-columns: 360px 1fr 380px; gap: 26px; padding-top: 13px; }
+  .tokens h5 { margin: 0 0 8px; font-family: var(--mono); font-size: 8px; letter-spacing: .12em; color: var(--green); font-weight: 400; }
+  .swatches { display: flex; gap: 7px; }
+  .swatch { width: 52px; }
+  .swatch i { display: block; height: 23px; border: 1px solid rgba(0,0,0,.08); }
+  .swatch span { display: block; font-family: var(--mono); font-size: 6.5px; color: #68736a; margin-top: 4px; }
+  .type-sample { display: flex; align-items: baseline; gap: 18px; }
+  .type-sample strong { font-family: var(--serif); font-size: 27px; font-weight: 600; letter-spacing: -.02em; }
+  .type-sample span { font-size: 10px; color: var(--muted); line-height: 1.6; max-width: 260px; }
+  .type-sample code { font-family: var(--mono); font-size: 7px; color: #68736a; display: block; margin-top: 4px; }
+  .principles { display: flex; flex-direction: column; gap: 5px; }
+  .principles p { margin: 0; font-size: 9px; color: var(--muted); display: flex; gap: 7px; }
+  .principles p::before { content: "—"; color: var(--green); }
+</style>
+</head>
+<body>
+<div class="board">
+  <header class="board-head">
+    <div>
+      <div class="scheme-line"><span class="scheme-no">PROPOSAL C / 03</span><h1>档案 <span>Catalogue</span></h1></div>
+      <p class="head-note">目录编号、档案字段、强分隔线。像使用一套编目系统：克制、干燥、所有信息都有出处。</p>
+    </div>
+    <div class="head-right"><div class="mode-key"><i class="light"></i> LIGHT <i class="dark"></i> DARK</div></div>
+  </header>
+
+  <main class="preview">
+    <section class="home" aria-label="日间首页方案 C">
+      <div class="site-head">
+        <div class="wordmark">DRAFTLY<span>写作编目 / 2026</span></div>
+        <nav class="site-nav"><b>目录</b><span>方法</span><span>原则</span><span>反馈</span></nav>
+        <div class="site-tools"><span>ZH / EN</span><span class="theme-pill"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span></div>
+      </div>
+
+      <div class="hero">
+        <div class="hero-copy">
+          <div class="kicker">CATALOGUE OF WRITING TOOLS</div>
+          <h2>写作，是一种<br /><em>可训练的手艺</em>。</h2>
+          <p class="hero-lead">不替你决定写什么。只把表达中的问题、依据和选择，一件件摆到桌面上。</p>
+          <div class="hero-actions"><a class="link-primary" href="#">从一份草稿开始<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="link-secondary" href="#">EDITORIAL PRINCIPLES →</a></div>
+          <div class="hero-meta"><span>06 个工作模块</span><i>/</i><span>中英双语</span><i>/</i><span>可追溯修改</span></div>
+        </div>
+
+        <div class="record">
+          <div class="record-top"><b>FILE / 06</b><span>STYLE PROFILE</span></div>
+          <div class="record-no">06</div>
+          <h3>写作风格画像</h3>
+          <p>从参考文本中提取语气、用词、句式与修辞习惯。短样本只给临时判断，不冒充稳定风格。</p>
+          <div class="record-rule"></div>
+          <div class="record-dl"><b>样本</b><span>TXT / DOCX / PDF</span><b>输出</b><span>六维 + 推荐写法</span><b>状态</b><span>可编辑 / 可删除</span></div>
+          <div class="stamp">TRACEABLE<span>每一条结论都可复核</span></div>
+        </div>
+      </div>
+
+      <div class="catalogue">
+        <div class="catalogue-head"><h3>INDEX / 工作目录</h3><span>01—06 · 按用途编目</span></div>
+        <a class="cat-row" href="#"><span class="no">01</span><h4>文本润色<span>POLISH</span></h4><p>九种标准，保留事实、数字与引用。</p><span class="tag">EDIT</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="cat-row" href="#"><span class="no">02</span><h4>风格画像<span>STYLE PROFILE</span></h4><p>从样本提取表达习惯，生成可编辑画像。</p><span class="tag">ANALYSE</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="cat-row" href="#"><span class="no">03</span><h4>语法检查<span>GRAMMAR</span></h4><p>逐条定位，接受或忽略，不静默修改。</p><span class="tag">CHECK</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="cat-row" href="#"><span class="no">04</span><h4>中英翻译<span>TRANSLATE</span></h4><p>自然、正式、学术三种语气，可转送润色。</p><span class="tag">CONVERT</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="cat-row" href="#"><span class="no">05</span><h4>人性化改写<span>HUMANISE</span></h4><p>减少模板感，不编造经历或数据。</p><span class="tag">REWRITE</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="cat-row" href="#"><span class="no">06</span><h4>AI 文本检测<span>DETECT</span></h4><p>概率性信号，不是作者身份证明。</p><span class="tag">SIGNAL</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="home-foot"><span>DRAFTLY · 写作编目 / 让每一句话更接近你想表达的样子</span><span>PRIVACY / TERMS</span></div>
+    </section>
+
+    <aside class="app" aria-label="夜间工作台方案 C">
+      <div class="app-top"><span class="app-brand">DRAFTLY</span><nav class="app-nav"><b>01 润色</b><span>02 画像</span><span>03 语法</span><span>04 翻译</span></nav><span class="app-mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></svg></span></div>
+      <div class="app-body">
+        <div class="meta-rail">
+          <div class="meta-label">RECORD</div><div class="meta-value">SP—06</div>
+          <div class="meta-label">OWNER</div><div class="meta-value">ANON—7F2C</div>
+          <div class="meta-label">SAMPLES</div><div class="meta-value green">01 / 08</div>
+          <div class="meta-label">UPDATED</div><div class="meta-value">JUST NOW</div>
+          <div class="meta-stamp">TRACEABLE</div>
+        </div>
+        <div class="app-content">
+          <div class="app-head">
+            <div class="app-kicker">STYLE PROFILE / RECORD 06</div>
+            <h2>写作风格画像</h2>
+            <p>以下是语言特征的编目，不是对作者身份或写作水平的判断。</p>
+          </div>
+
+          <div class="field">
+            <div class="field-label"><b>FIELD 01 / 参考文本</b><span>195 字 · 1 份</span></div>
+            <div class="text-box"><span>写作不是把话说漂亮，而是把话说清楚。</span>我先删去不必要的修饰，再检查每一个判断是否有依据。<span class="caret"></span></div>
+            <div class="field-foot"><span>TXT / DOCX / PDF · 无 OCR</span><span>上限 12,000 字</span></div>
+            <div class="field-actions"><button class="mini-btn solid">添加文本<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button class="mini-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 20h14"/></svg>选择文件</button></div>
+            <div class="sample-line"><span>样本 01 · 粘贴文本</span><em>195 字 / 删除</em></div>
+          </div>
+
+          <div class="result">
+            <div class="result-head"><h3>ANALYSIS / 分析记录</h3><span>置信度 · 低</span></div>
+            <p class="result-summary">短句为主，判断克制；少用形容词，倾向先给结论再补依据。样本较短，暂不足以判断稳定风格。</p>
+            <div class="record-table">
+              <div class="record-row"><b>语气</b><p>克制、直接，避免抒情。</p><em>HIGH</em></div>
+              <div class="record-row"><b>用词</b><p>具体动词优先，少用套语。</p><em class="mid">MED</em></div>
+              <div class="record-row"><b>句式</b><p>短句推进，一句一个判断。</p><em>HIGH</em></div>
+              <div class="record-row"><b>表达</b><p>结论先行，再补依据。</p><em class="mid">MED</em></div>
+              <div class="record-row"><b>修辞</b><p>极少比喻，节奏靠停顿。</p><em class="low">LOW</em></div>
+            </div>
+          </div>
+
+          <div class="saved-record"><div><b>短句随笔 / 01</b><em>1 份样本 · 刚刚更新</em></div><span>使用 →</span></div>
+          <div class="app-foot"><span>CONSISTENCY · HIGH / MED / LOW</span><span>NO PERCENTAGE</span></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="tokens">
+    <div><h5>COLOR / 石与墨绿</h5><div class="swatches"><div class="swatch"><i style="background:#f8f6ee"></i><span>#F8F6EE</span></div><div class="swatch"><i style="background:#e7e4d8"></i><span>#E7E4D8</span></div><div class="swatch"><i style="background:#315c43"></i><span>#315C43</span></div><div class="swatch"><i style="background:#111512"></i><span>#111512</span></div><div class="swatch"><i style="background:#91b99d"></i><span>#91B99D</span></div></div></div>
+    <div><h5>TYPE / 编目文字</h5><div class="type-sample"><strong>有据可查。</strong><span>标题用旧式衬线，字段名与状态用等宽字；正文保持低装饰、高可读。<code>GEORGIA / SEGOE UI / CASCADIA MONO</code></span></div></div>
+    <div class="principles"><h5>PRINCIPLES / 减少 AI 味</h5><p>界面像目录与档案，不像聊天窗口。</p><p>不使用图标墙、渐变与发光效果。</p><p>每个结论标出来源、限制与状态。</p></div>
+  </footer>
+</div>
+</body>
+</html>
